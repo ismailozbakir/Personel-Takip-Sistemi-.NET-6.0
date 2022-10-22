@@ -183,7 +183,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "PersonelStats";
-            this.Text = "PersonelStats";
+            this.Text = "Personel İstatistikleri";
             this.Load += new System.EventHandler(this.PersonelStats_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

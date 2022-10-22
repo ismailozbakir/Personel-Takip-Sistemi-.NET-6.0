@@ -42,7 +42,7 @@ namespace PersonelKayit
         {
             connection.Open();
             bool maasDurum = int.TryParse(maskedMaas.Text, out int maas);
-            string query = $"INSERT INTO Tbl_Personel (PerAd, PerSoyad, PerSehir, PerMaas, PerDurum, PerMeslek) VALUES ('{txbAd.Text}', '{txbSoyad.Text}', '{comboSehir.Text}', '{maskedMaas.Text}', '{(radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : "Belirtilmedi")}', '{txbMeslek.Text}')";
+            string query = $"INSERT INTO Tbl_Personel (PerAd, PerSoyad, PerSehir, PerMaas, PerDurum, PerMeslek) VALUES ('{txbAd.Text}', '{txbSoyad.Text}', '{comboSehir.Text}', '{maskedMaas.Text}', '{(radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : null)}', '{txbMeslek.Text}')";
             SqlCommand cmd = new SqlCommand(query, connection);
             
             if (txbAd.Text == "" || txbSoyad.Text == "")
@@ -121,7 +121,7 @@ namespace PersonelKayit
             connection.Open();
             int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex;
             short perId = (short)dataGridView1.Rows[selectedRowIndex].Cells[0].Value;
-            string query = $"Update Tbl_Personel Set PerAd = '{txbAd.Text}', PerSoyad = '{txbSoyad.Text}', PerSehir = '{comboSehir.Text}', PerMaas = {maskedMaas.Text}, PerDurum = '{(radioEvli.Checked ? "Evli" : radioBekar.Checked ? "Bekar" : "Belirtilmedi")}', PerMeslek = '{txbMeslek.Text}' where PerId = {perId}";
+            string query = $"Update Tbl_Personel Set PerAd = '{txbAd.Text}', PerSoyad = '{txbSoyad.Text}', PerSehir = '{comboSehir.Text}', PerMaas = {maskedMaas.Text}, PerDurum = '{(radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : null)}', PerMeslek = '{txbMeslek.Text}' where PerId = {perId}";
             SqlCommand cmdGuncelle = new(query, connection);
             cmdGuncelle.ExecuteNonQuery();
             connection.Close();
