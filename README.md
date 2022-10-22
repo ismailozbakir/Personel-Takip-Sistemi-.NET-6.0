@@ -74,8 +74,8 @@ private void btnGuncelle_Click(object sender, EventArgs e)
     SqlCommand cmdGuncelle = new(query, connection);
     cmdGuncelle.ExecuteNonQuery();
     connection.Close();
-            Temizle();
-            MessageBox.Show("Güncellendi");
+    Temizle();
+    MessageBox.Show("Güncellendi");
 
 }
 ```
