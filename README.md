@@ -8,7 +8,7 @@
 </p>
 
 ---
-> Önceki .NET framework 4.x olarak bilinen windows form yapısındaki birçok araç (tool), .NET 6.0'a taşınmış olsa da özellikle SQL veri tabanı ile ilgili işlemlerde veri tabanına bağlantı oluşturma sihirbazı ve bazı grafik araçlarından yoksundur. Bu eksiklikleri bir takım ek kodlama çalışmaları ile aşarak kursta anlatıldığı gibi çalışan bir uygulama yazabildim. 
+> Önceki .NET framework 4.x olarak bilinen windows form yapısındaki birçok araç (tool), .NET 6.0'a taşınmış olsa da özellikle SQL veri tabanı ile ilgili işlemlerde veri tabanına bağlantı oluşturma sihirbazı ve bazı grafik araçları .NET 6.0'da bulunmamaktadır. Bu eksiklikleri bir takım ek kodlama çalışmaları ile aşarak kursta anlatıldığı gibi çalışan bir uygulama yazabildim. 
 
 <p align="center">
   <img width="750" height="400" src="https://user-images.githubusercontent.com/31667471/197298795-c4bd2974-d298-4c1f-ade5-6b65aec9fa0c.PNG">
@@ -16,6 +16,12 @@
 
 ---
 Ek olarak :
+* [x] Uygulamada **Grafikler** özelliğinin çalışması için için NuGet paket yükleyicisi ile *Maikebing.System.Windows.Forms.DataVisualization* paketini yükledim.
+<p align="center">
+  <img width="570" height="300" src="https://user-images.githubusercontent.com/31667471/197308385-efb692a4-505e-4731-b5b0-7cde4de71645.png">
+</p>
+
+---
 * [x] admin panelinde textboxlara veri girişi yapıldıktan sonra "enter" tuşunun işlevsel hale getirilmesi ve "Ding" sesinin kesilmesi,
 <p align="center">
   <img width="250" height="150" src="https://user-images.githubusercontent.com/31667471/197298511-71164a00-14ea-4d6f-b3e3-ef648826d53b.PNG">
