@@ -42,9 +42,17 @@ namespace PersonelKayit
         {
             connection.Open();
             bool maasDurum = int.TryParse(maskedMaas.Text, out int maas);
-            string query = $"INSERT INTO Tbl_Personel (PerAd, PerSoyad, PerSehir, PerMaas, PerDurum, PerMeslek) VALUES ('{txbAd.Text}', '{txbSoyad.Text}', '{comboSehir.Text}', '{maskedMaas.Text}', '{(radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : null)}', '{txbMeslek.Text}')";
+            string durum = $"{(radioEvli.Checked ? 1 : radioBekar.Checked ? 0 : null)}";
+            string query = "INSERT INTO Tbl_Personel (PerAd, PerSoyad, PerSehir, PerMaas, PerDurum, PerMeslek) VALUES (@col1, @col2, @col3, @col4, @col5, @col6)";
+
             SqlCommand cmd = new SqlCommand(query, connection);
-            
+            cmd.Parameters.AddWithValue("@col1", txbAd.Text);
+            cmd.Parameters.AddWithValue("@col2", txbSoyad.Text);
+            cmd.Parameters.AddWithValue("@col3", comboSehir.Text);
+            cmd.Parameters.AddWithValue("@col4", maskedMaas.Text);
+            cmd.Parameters.AddWithValue("@col5", durum);
+            cmd.Parameters.AddWithValue("@col6", txbMeslek.Text);
+
             if (txbAd.Text == "" || txbSoyad.Text == "")
                 MessageBox.Show("Ad ve Soyad girilmesi zorunludur!");
             
@@ -59,21 +67,6 @@ namespace PersonelKayit
 
             }
             Temizle();
-
-
-            //// Murat Yücedað Udemy dersinde aþaðýdaki gibi yapmýþ
-            
-            //connection.Open();
-            //string query = "INSERT INTO Tbl_Personel (PerAd, PerSoyad, PerSehir, PerMaas, PerDurum, PerMeslek) VALUES (@p1, @p2, @p3, @p4, @p5, @p6)";
-            //SqlCommand cmd = new SqlCommand(query, connection);
-            //cmd.Parameters.AddWithValue("@p1", txbAd.Text);
-            //cmd.Parameters.AddWithValue("@p2", txbSoyad.Text);
-            //cmd.Parameters.AddWithValue("@p3", comboSehir.Text);
-            //cmd.Parameters.AddWithValue("@p4", maskedMaas.Text);
-            //cmd.Parameters.AddWithValue("@p5", radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : "Belirtilmedi");
-            //cmd.Parameters.AddWithValue("@p6", txbMeslek.Text);
-            //cmd.ExecuteNonQuery();
-            //connection.Close();
         }
 
         private void btnTemizle_Click(object sender, EventArgs e)
@@ -83,30 +76,33 @@ namespace PersonelKayit
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex;
-            txbAd.Text = dataGridView1.Rows[selectedRowIndex].Cells[1].Value.ToString();
-            txbSoyad.Text = dataGridView1.Rows[selectedRowIndex].Cells[2].Value.ToString();
-            comboSehir.Text = dataGridView1.Rows[selectedRowIndex].Cells[3].Value.ToString();
-            maskedMaas.Text = dataGridView1.Rows[selectedRowIndex].Cells[4].Value.ToString();
-            radioBekar.Checked = dataGridView1.Rows[selectedRowIndex].Cells[5].Value.ToString() == "Bekar" ? true : false;
-            radioEvli.Checked = dataGridView1.Rows[selectedRowIndex].Cells[5].Value.ToString() == "Evli" ? true : false;
-            txbMeslek.Text = dataGridView1.Rows[selectedRowIndex].Cells[6].Value.ToString();
+            txbAd.Text = dataGridView1.Rows[selectedRowIndex].Cells[1].Value?.ToString();
+            txbSoyad.Text = dataGridView1.Rows[selectedRowIndex].Cells[2].Value?.ToString();
+            comboSehir.Text = dataGridView1.Rows[selectedRowIndex].Cells[3].Value?.ToString();
+            maskedMaas.Text = dataGridView1.Rows[selectedRowIndex].Cells[4].Value?.ToString();
+            radioBekar.Checked = dataGridView1.Rows[selectedRowIndex].Cells[5].Value?.ToString() == "Bekar" ? true : false;
+            radioEvli.Checked = dataGridView1.Rows[selectedRowIndex].Cells[5].Value?.ToString() == "Evli" ? true : false;
+            txbMeslek.Text = dataGridView1.Rows[selectedRowIndex].Cells[6].Value?.ToString();
 
         }
 
         private void btnSil_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Silmek için lütfen onaylayýn.", "Silme Onayý", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            DialogResult result = MessageBox.Show("Silmek için lütfen onaylayýn.", "Uyarý!", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (result.Equals(DialogResult.OK))
             {
                 connection.Open();
                 int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex;
                 short perId = (short)dataGridView1.Rows[selectedRowIndex].Cells[0].Value;
-                string query = $"Delete From Tbl_Personel where PerId = {perId}";
+                string query = "Delete From Tbl_Personel where PerId = @perId";
                 string query2 = @"declare @max int select @max=max(PerId) from Tbl_Personel if @max IS NULL SET @max = 0 DBCC CHECKIDENT ('Tbl_Personel', RESEED, @max)";
                 string beforeDeleteId = perId.ToString();
                 string beforeDeleteAd = txbAd.Text;
                 string beforeDeleteSoyad = txbSoyad.Text;
+
                 SqlCommand cmdDelete = new(query, connection);
+                cmdDelete.Parameters.AddWithValue("@perId", perId);
+
                 SqlCommand cmdReset = new(query2, connection);
                 cmdDelete.ExecuteNonQuery();
                 cmdReset.ExecuteNonQuery();
@@ -121,8 +117,17 @@ namespace PersonelKayit
             connection.Open();
             int selectedRowIndex = dataGridView1.SelectedCells[0].RowIndex;
             short perId = (short)dataGridView1.Rows[selectedRowIndex].Cells[0].Value;
-            string query = $"Update Tbl_Personel Set PerAd = '{txbAd.Text}', PerSoyad = '{txbSoyad.Text}', PerSehir = '{comboSehir.Text}', PerMaas = {maskedMaas.Text}, PerDurum = '{(radioEvli.Checked ? "1" : radioBekar.Checked ? "0" : null)}', PerMeslek = '{txbMeslek.Text}' where PerId = {perId}";
+            string durum = $"{(radioEvli.Checked ? 1 : radioBekar.Checked ? 0 : null)}";
+            string query = $"Update Tbl_Personel Set PerAd = @perAd, PerSoyad = @perSoyad, PerSehir = @perSehir, PerMaas = @perMaas, PerDurum = @perDurum, PerMeslek = @perMeslek where PerId = @perId";
+
             SqlCommand cmdGuncelle = new(query, connection);
+            cmdGuncelle.Parameters.AddWithValue("@perAd", txbAd.Text);
+            cmdGuncelle.Parameters.AddWithValue("@perSoyad", txbSoyad.Text);
+            cmdGuncelle.Parameters.AddWithValue("@perSehir", comboSehir.Text);
+            cmdGuncelle.Parameters.AddWithValue("@perMaas", maskedMaas.Text);
+            cmdGuncelle.Parameters.AddWithValue("@perDurum", durum);
+            cmdGuncelle.Parameters.AddWithValue("@perMeslek", txbMeslek.Text);
+            cmdGuncelle.Parameters.AddWithValue("@perId", perId);
             cmdGuncelle.ExecuteNonQuery();
             connection.Close();
             Temizle();

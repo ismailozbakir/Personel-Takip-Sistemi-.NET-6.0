@@ -28,7 +28,7 @@ namespace PersonelKayit
             using (SqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
-                    label.Text = query.Contains("SUM") || query.Contains("AVG") ? $"{reader[0].ToString()} ₺" : reader[0].ToString();
+                    label.Text = query.Contains("SUM") || query.Contains("AVG") ? $"{reader[0]?.ToString()} ₺" : reader[0]?.ToString();
 
             }
             connection.Close();

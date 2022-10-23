@@ -23,8 +23,11 @@ namespace PersonelKayit
         private void btnLogin_Click(object sender, EventArgs e)
         {
             connection.Open();
-            string query = $"Select * From Tbl_Personel_Login where UserName = '{txbUser.Text}' and Pass = '{txbPass.Text}'";
+            //string query = $"Select * From Tbl_Personel_Login where UserName = '{txbUser.Text}' and Pass = '{txbPass.Text}'"; // Bu şekilde yapılırsa SQL Injection saldırısına açık olabilir.
+            string query = "Select * From Tbl_Personel_Login where UserName = @user and Pass = @password";
             SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@user", txbUser.Text);
+            cmd.Parameters.AddWithValue("@password", txbPass.Text);
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
